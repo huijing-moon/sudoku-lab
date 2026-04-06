@@ -1,8 +1,9 @@
 import React from 'react';
-import { TouchableOpacity, Text, StyleSheet } from 'react-native';
+import { TouchableOpacity, Text, StyleSheet, View } from 'react-native';
 
 type Props = {
     value: number | null;
+    memos: number[];
     isSelected: boolean;
     isHighlight: boolean;
     onPress: () => void;
@@ -10,7 +11,7 @@ type Props = {
     isError: boolean;
 };
 
-export default function Cell({ value, isSelected, isHighlight, onPress , isFixed, isError}: Props) {
+export default function Cell({ value, memos, isSelected, isHighlight, onPress, isFixed, isError }: Props) {
     return (
         <TouchableOpacity
             style={[
@@ -20,10 +21,19 @@ export default function Cell({ value, isSelected, isHighlight, onPress , isFixed
                 isFixed && styles.fixed,
                 isError && styles.error,
             ]}
-
             onPress={onPress}
         >
-            <Text style={styles.text}>{value ?? ''}</Text>
+            {value !== null ? (
+                <Text style={[styles.text, isFixed && styles.fixedText]}>{value}</Text>
+            ) : memos.length > 0 ? (
+                <View style={styles.memoGrid}>
+                    {[1,2,3,4,5,6,7,8,9].map(n => (
+                        <Text key={n} style={styles.memoText}>
+                            {memos.includes(n) ? n : ' '}
+                        </Text>
+                    ))}
+                </View>
+            ) : null}
         </TouchableOpacity>
     );
 }
@@ -42,13 +52,31 @@ const styles = StyleSheet.create({
     highlight: {
         backgroundColor: '#F5E6DA',
     },
-    text: {
-        fontSize: 18,
-    },
     fixed: {
         backgroundColor: '#EAEAEA',
     },
     error: {
         backgroundColor: '#FFCDD2',
+    },
+    text: {
+        fontSize: 18,
+    },
+    fixedText: {
+        fontWeight: 'bold',
+        color: '#333',
+    },
+    memoGrid: {
+        width: '100%',
+        height: '100%',
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+        padding: 1,
+    },
+    memoText: {
+        width: '33.33%',
+        height: '33.33%',
+        fontSize: 7,
+        textAlign: 'center',
+        color: '#5c6bc0',
     },
 });

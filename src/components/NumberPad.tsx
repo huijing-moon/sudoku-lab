@@ -4,9 +4,11 @@ import { View, TouchableOpacity, Text, StyleSheet } from 'react-native';
 type Props = {
     onPressNumber: (num: number) => void;
     onErase: () => void;
+    isMemoMode: boolean;
+    onToggleMemo: () => void;
 };
 
-export default function NumberPad({ onPressNumber, onErase }: Props) {
+export default function NumberPad({ onPressNumber, onErase, isMemoMode, onToggleMemo }: Props) {
     return (
         <View style={styles.container}>
             <View style={styles.row}>
@@ -21,9 +23,20 @@ export default function NumberPad({ onPressNumber, onErase }: Props) {
                 ))}
             </View>
 
-            <TouchableOpacity style={styles.erase} onPress={onErase}>
-                <Text style={styles.eraseText}>Erase</Text>
-            </TouchableOpacity>
+            <View style={styles.actions}>
+                <TouchableOpacity style={styles.eraseButton} onPress={onErase}>
+                    <Text style={styles.eraseText}>지우기</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                    style={[styles.memoButton, isMemoMode && styles.memoButtonActive]}
+                    onPress={onToggleMemo}
+                >
+                    <Text style={[styles.memoText, isMemoMode && styles.memoTextActive]}>
+                        ✏️ 메모 {isMemoMode ? 'ON' : 'OFF'}
+                    </Text>
+                </TouchableOpacity>
+            </View>
         </View>
     );
 }
@@ -47,10 +60,37 @@ const styles = StyleSheet.create({
     text: {
         fontSize: 20,
     },
-    erase: {
-        marginTop: 10,
+    actions: {
+        flexDirection: 'row',
+        marginTop: 12,
+        gap: 12,
+    },
+    eraseButton: {
+        paddingVertical: 8,
+        paddingHorizontal: 20,
+        borderRadius: 8,
+        backgroundColor: '#FFEBEE',
     },
     eraseText: {
-        color: 'red',
+        color: '#E53935',
+        fontSize: 15,
+        fontWeight: '600',
+    },
+    memoButton: {
+        paddingVertical: 8,
+        paddingHorizontal: 20,
+        borderRadius: 8,
+        backgroundColor: '#EEE',
+    },
+    memoButtonActive: {
+        backgroundColor: '#5c6bc0',
+    },
+    memoText: {
+        fontSize: 15,
+        color: '#555',
+        fontWeight: '600',
+    },
+    memoTextActive: {
+        color: '#fff',
     },
 });
